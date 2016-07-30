@@ -1,0 +1,109 @@
+<html>
+
+<head>
+    <script type="text/javascript" src="../node_modules/angular/angular.js"> </script>
+    <script type="text/javascript" src="../Src/Index.js"> </script>
+    <link rel="stylesheet" type="text/css" href="../node_modules/bootstrap/dist/css/bootstrap.css"> </link>
+    <script type="text/javascript" src="../node_modules/jquery/dist/jquery.js"> </script>
+    <script type="text/javascript" src="../node_modules/bootstrap/dist/js/bootstrap.js"> </script>
+</head>
+
+<body>
+    <div ng-app="featuresApp">
+        <div ng-controller="FeatureController">
+            <div style="float:right;margin-right:10px;margin-bottom:40px"> <a ng-show="!isLoggedIn" data-toggle="modal" data-target="#LoginModal" href="#"> Sign in </a> </div>
+            <table class="table table-bordered table-striped">
+                <thead>
+                    <tr>
+                        <th> Feature Name </th>
+                        <th> Tags</th>
+                        <th> Publishing Date</th>
+                        <th> Type</th>
+                        <th ng-show="IsAdminUser()"> Action </th>
+                    </tr>
+                </thead>
+                <tbody>
+
+                    <tr ng-repeat="feature in Features">
+                        <td> {{feature.Name}} </td>
+                        <td> {{feature.Tags}} </td>
+                        <td> {{feature.PublishingDate | date:'dd/MM/yyyy'}} </td>
+                        <td> {{feature.Type}} </td>
+                        <td ng-show="IsAdminUser() "> <a ng-show="feature.Active" ng-click="DeactivateFeature(feature)" href="#"> Deactivate </a> </td>
+                    </tr>
+                </tbody>
+            </table>
+
+            <div id="LoginModal" class="modal fade" role="dialog">
+                <div class="modal-dialog">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <button type="button" class="close" data-dismiss="modal">&times;</button>
+                            <h4 class="modal-title">Sign In</h4>
+                        </div>
+                        <div class="modal-body">
+                            <div class="form-group">
+                                <label for="txtUserName"> User Name :  </label>
+                                <input id="txtUserName" type="text" ng-model="UserName">
+                            </div>
+                            <div class="form-group">
+                                <label for="txtpassword">
+                             Password : 
+                                 </label>
+                                <input id="txtpassword" type="password" ng-model="Password">
+                            </div>
+                        </div>
+                        <div class="modal-footer">
+                            <span style="color:Red;float:left">{{LoginErrorMessage}} </span>
+                            <button type="button" class="btn btn-Success" ng-click="Authenticate()"> Log In</button>
+                            <button type="button" class="btn btn-Error" data-dismiss="modal">Close</button>
+
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+
+            <div ng-show="IsAdminUser()" id="AddUpdateForm">
+                <div class="form-group">
+                    <label for="txtUtxtFeatureNameserName"> Feature Name :  </label>
+                    <input id="txtFeatureName" type="text" ng-model="CurrentFeature.Name">
+                </div>
+                <div class="form-group">
+                    <label for="txtTags">
+                            Tags
+                                 </label>
+                    <input id="txtTags" type="text" ng-model="CurrentFeature.Tags">
+                </div>
+                <div class="form-group">
+                    <label for="txtPublishingDate">
+                            Publishing Date
+                                 </label>
+                    <input id="txtPublishingDate" type="date" ng-model="CurrentFeature.PublishingDate">
+                </div>
+                  <div class="form-group">
+                    <label for="txtType">
+                            Type
+                                 </label>
+                    <input id="txtType" type="text" ng-model="CurrentFeature.Type">
+                </div>
+
+                 <div ng-repeat="image in CurrentFeature.Images" class="form-group">
+                    <label for="txtimage">
+                            Image {{ $index+1}}
+                                 </label>
+                    <input id="txtimage" type="text" ng-model="image.url">
+                </div>
+                <div class="form-group">
+                <button class="btn btn-normal" ng-click="AddImage($index)" >Add Image </button>
+                </div>
+
+                <button class="btn btn-Success" ng-click="SaveFeature()" > Save </button>
+            </div>
+        </div>
+    </div>
+
+    <div>
+</body>
+
+</html>
