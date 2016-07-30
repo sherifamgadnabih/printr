@@ -70,7 +70,7 @@ featuresApp.controller('FeatureController', function ($scope, $http) {
 
     }
     $scope.AddImage = function (index) {
-        $scope.CurrentFeature.Images.push({Url:'',index:index});
+        $scope.CurrentFeature.Images.push({Url:''});
     }
 
      $scope.SaveFeature = function () {
@@ -84,10 +84,8 @@ featuresApp.controller('FeatureController', function ($scope, $http) {
          feature.User=$scope.User;
        $http.post('http://localhost:8080/AddFeature',JSON.stringify(feature)).success(function(data){
            if(data.Success){
-               var savedFeature = angular.copy($scope.CurrentFeature);
-               savedFeature._id= data.Id;
-               console.log(savedFeature)
-               $scope.Features.push(savedFeature)
+               feature._id= data.Id;
+               $scope.Features.push(feature)
            }
        })
     }

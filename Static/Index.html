@@ -19,6 +19,7 @@
                         <th> Tags</th>
                         <th> Publishing Date</th>
                         <th> Type</th>
+                        <th> Images</th>
                         <th ng-show="IsAdminUser()"> Action </th>
                     </tr>
                 </thead>
@@ -29,6 +30,7 @@
                         <td> {{feature.Tags}} </td>
                         <td> {{feature.PublishingDate | date:'dd/MM/yyyy'}} </td>
                         <td> {{feature.Type}} </td>
+                        <td> <div ng-repeat="image in feature.Images track by $index"> <a href="{{image}}" > Image {{$index+1}} </a> </div </td>
                         <td ng-show="IsAdminUser() "> <a ng-show="feature.Active" ng-click="DeactivateFeature(feature)" href="#"> Deactivate </a> </td>
                     </tr>
                 </tbody>
@@ -88,11 +90,11 @@
                     <input id="txtType" type="text" ng-model="CurrentFeature.Type">
                 </div>
 
-                 <div ng-repeat="image in CurrentFeature.Images" class="form-group">
+                 <div ng-repeat="image in CurrentFeature.Images track by $index" class="form-group">
                     <label for="txtimage">
                             Image {{ $index+1}}
                                  </label>
-                    <input id="txtimage" type="text" ng-model="image.url">
+                    <input id="txtimage" type="text" ng-model="image.Url">
                 </div>
                 <div class="form-group">
                 <button class="btn btn-normal" ng-click="AddImage($index)" >Add Image </button>
