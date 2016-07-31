@@ -11,10 +11,10 @@ featuresApp.controller('FeatureController', function ($scope, $http) {
     $scope.CurrentFeature = {
         Name: '',
         Tags: '',
-        PublishingDate:'',
+        PublishingDate: '',
         Images: [],
         Type: '',
-        Active:true
+        Active: true
     }
 
     $scope.IsAdminUser = function () {
@@ -70,23 +70,52 @@ featuresApp.controller('FeatureController', function ($scope, $http) {
 
     }
     $scope.AddImage = function (index) {
-        $scope.CurrentFeature.Images.push({Url:''});
+        $scope.CurrentFeature.Images.push({ Url: '' });
     }
 
-     $scope.SaveFeature = function () {
-         $scope.CurrentFeature.token = $scope.UserToken;
-         var feature = angular.copy($scope.CurrentFeature)
-         feature.Images=[];
-         $scope.CurrentFeature.Images.forEach(function(image){
-             feature.Images.push(image.Url)
+    $scope.SaveFeature = function () {
+        $scope.CurrentFeature.token = $scope.UserToken;
+        var feature = angular.copy($scope.CurrentFeature)
+        feature.Images = [];
+        $scope.CurrentFeature.Images.forEach(function (image) {
+            feature.Images.push(image.Url)
 
-         })
-         feature.User=$scope.User;
-       $http.post('http://localhost:8080/AddFeature',JSON.stringify(feature)).success(function(data){
-           if(data.Success){
-               feature._id= data.Id;
-               $scope.Features.push(feature)
-           }
-       })
+        })
+        feature.User = $scope.User;
+        if (feature._id) {
+            $http.put('http://localhost:8080/updateFeature', JSON.stringify(feature)).success(function (data) {
+                if (data.Success) {
+                    getFeatures()
+                }
+            })
+
+        }
+        else {
+            $http.post('http://localhost:8080/AddFeature', JSON.stringify(feature)).success(function (data) {
+                if (data.Success) {
+                    feature._id = data.Id;
+                    $scope.Features.push(feature)
+                }
+            })
+        }
+    }
+
+    $scope.EditFeature = function (feature) {
+        $scope.CurrentFeature = {}
+        var date = new Date(feature.PublishingDate)
+        $scope.CurrentFeature.PublishingDate = date
+        $scope.CurrentFeature.Images = []
+        feature.Images.forEach(function (Image) {
+
+            $scope.CurrentFeature.Images.push({ Url: Image })
+        })
+        $scope.CurrentFeature.Type = feature.Type
+        $scope.CurrentFeature.Tags = feature.Tags
+        $scope.CurrentFeature.Name = feature.Name
+        $scope.CurrentFeature._id = feature._id;
+    }
+
+    $scope.RemoveImage=function(image){
+        $scope.CurrentFeature.Images.splice($scope.CurrentFeature.Images.indexOf(image),1)
     }
 })

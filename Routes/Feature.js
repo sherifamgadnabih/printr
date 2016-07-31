@@ -78,4 +78,20 @@ module.exports = function (app) {
             response.json({ Success:true ,info: 'feature deactivated successfully' })
         })
     })
+
+     app.put('/updateFeature', function (request, response) {
+         var featuretoupdate = new Features(request.body)
+        Features.findById(featuretoupdate._id, function (err, feature) {
+            if (err) {
+                response.json({Success:false ,info: 'error during find feature', error: err })
+            };
+            feature.Name = featuretoupdate.Name
+            feature.Tags = featuretoupdate.Tags
+            feature.Type = featuretoupdate.Type
+            feature.PublishingDate = featuretoupdate.PublishingDate
+            feature.Images = featuretoupdate.Images
+            feature.save()
+            response.json({ Success:true ,info: 'feature updated successfully' })
+        })
+    })
 }
