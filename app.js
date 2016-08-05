@@ -13,7 +13,7 @@ app.use('/Src', express.static('Src'))
 var AdminFilter = require('./MiddleWares/AdminFilter.js') 
 app.use(AdminFilter)
 var featureRoutes = require('./Routes/Feature.js')(app)
-
+var UserRoutes = require('./Routes/User.js')(app)
 
 mongoose.connect(config.Database)
 

@@ -16,7 +16,9 @@ featuresApp.controller('FeatureController', function ($scope, $http) {
         Type: '',
         Active: true
     }
-
+    $scope.adminUsername = ''
+    $scope.adminPassword = ''
+    $scope.Users = ''
     $scope.IsAdminUser = function () {
         return $scope.User && $scope.User.Role == 'Admin';
     }
@@ -39,7 +41,6 @@ featuresApp.controller('FeatureController', function ($scope, $http) {
 
     }
 
-    getFeatures();
 
     $scope.Authenticate = function () {
         $http.post('http://localhost:8080/Authenticate', JSON.stringify({ username: $scope.UserName, password: $scope.Password })).success(function (data) {
@@ -115,7 +116,26 @@ featuresApp.controller('FeatureController', function ($scope, $http) {
         $scope.CurrentFeature._id = feature._id;
     }
 
-    $scope.RemoveImage=function(image){
-        $scope.CurrentFeature.Images.splice($scope.CurrentFeature.Images.indexOf(image),1)
+    $scope.RemoveImage = function (image) {
+        $scope.CurrentFeature.Images.splice($scope.CurrentFeature.Images.indexOf(image), 1)
     }
+    getUsers = function () {
+        $http.get('http://localhost:8080/getUsers').then(function (response) {
+             
+            if (response.data.Success) {
+              
+                $scope.Users = response.data.Users;
+            }
+        })
+    }
+    $scope.AddAdmin = function () {
+
+        $http.post('http://localhost:8080/AddAdmin', JSON.stringify({ username: $scope.adminUsername, password: $scope.adminPassword })).then(function (response) {
+            if (response.data.Success) {
+                getUsers();
+            }
+        })
+    }
+    getFeatures();
+    getUsers();
 })
